@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.user.service.impl.UserMapper">
+
+	<select id="selectGetLogIn" parameterType="com.example.demo.user.service.UserVO" resultType="int">
+		SELECT COUNT(*) AS TOTCNT
+		FROM PRO_USER PU
+		WHERE PU.USER_MAINID = #{id} AND PU.USER_PASS=#{password}
+	</select>
+	<select id="selectGetLogInfo" parameterType="com.example.demo.user.service.UserVO" resultType="Map">
+		SELECT PU.USER_ID AS userId
+			   , PU.USER_NAME AS userName
+			   , PU.USER_MAINID AS userMainid
+		FROM PRO_USER PU
+		WHERE PU.USER_MAINID = #{id} AND PU.USER_PASS=#{password}
+	</select>
+</mapper>

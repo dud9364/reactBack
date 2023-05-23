@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.board.service.impl.BoardMapper">
+	<!--  게시판 목록 수  -->
+	<select id="selectgetBoardCnt" parameterType="com.example.demo.board.service.BoardVO" resultType="int">
+		SELECT COUNT(1) AS TOTCNT
+		FROM board b
+		WHERE 1=1
+			<if test = 'serachId !=""'>
+			AND b.inptr LIKE CONCAT('%',#{serachId},'%')
+			</if>
+			<if test = 'serachTitle !=""'>
+			AND b.board_title LIKE CONCAT('%',#{serachTitle},'%')
+			</if>
+	</select>
+	<!--  게시판 목록 -->
+	<select id="selectgetBoardList" parameterType="com.example.demo.board.service.BoardVO" resultType="Map">
+		SELECT b.board_id AS boardId
+			  ,b.user_id AS userId
+			  ,b.board_title AS boardTitle
+			  ,b.board_content AS boardContent
+			  ,b.board_name AS boardName
+		      ,b.inptr AS inptr
+		      ,date_format(b.inptDt , '%Y-%m-%d') AS inptDt
+		FROM board b
+		WHERE 1=1
+			<if test = 'serachId !=""'>
+			AND b.inptr LIKE CONCAT('%',#{serachId},'%')
+			</if>
+			<if test = 'serachTitle !=""'>
+			AND b.board_title LIKE CONCAT('%',#{serachTitle},'%')
+			</if>
+	</select>
+	<!--  게시물 등록 -->
+	<insert id="insertBoardInpt"  parameterType="com.example.demo.board.service.BoardVO" useGeneratedKeys="true" keyProperty="boardId">
+		INSERT INTO  BOARD(
+		user_id
+		,board_title
+		,board_content
+		,inptr
+		,inptDt
+		)VALUES(
+		#{userId}
+		,#{boardTitle}
+		,#{boardContent}
+		,#{boardName}
+		,sysdate()
+		)	
+
+	</insert>
+	
+	<!--  게시물 상세화면  -->
+	<select id="selectgetBoardDetail" parameterType="com.example.demo.board.service.BoardVO" resultType="Map">
+		SELECT b.board_id AS boardId
+			  ,b.user_id AS userId
+			  ,b.board_title AS boardTitle
+			  ,b.board_content AS boardContent
+			  ,b.board_name AS boardName
+		      ,b.inptr AS inptr
+		      ,date_format(b.inptDt , '%Y-%m-%d') AS inptDt
+		FROM board b
+		WHERE 1=1
+			AND b.board_id = #{boardId}	
+	</select>
+	<!--  게시물 수정  -->
+	<update id="updateBoard" parameterType="com.example.demo.board.service.BoardVO">
+		UPDATE board SET
+			board_title = #{boardTitle},	
+			board_content = #{boardContent}
+		WHERE board_id = #{boardId}
+	</update>
+	<!--  게시물 삭제  -->
+	<delete id="deleteBoard"  parameterType="com.example.demo.board.service.BoardVO">
+		DELETE FROM board
+		WHERE board_id = #{boardId}
+	</delete>
+</mapper>
